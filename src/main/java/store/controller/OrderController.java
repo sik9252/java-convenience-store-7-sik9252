@@ -15,6 +15,6 @@ public class OrderController {
 
     public void order() {
         String input = inputView.getOrders();
-        orderService.createOrder(input);
+        orderService.create(input);
     }
 }

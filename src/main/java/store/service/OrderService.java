@@ -13,11 +13,11 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public List<Order> getOrders() {
+    public List<Order> get() {
         return orderRepository.getOrders();
     }
 
-    public void createOrder(String input) {
+    public void create(String input) {
         String[] orderInfo = StringUtils.splitStringWithComma(input);
 
         for (String info : orderInfo) {
@@ -27,11 +27,11 @@ public class OrderService {
             int quantity = Integer.parseInt(processedInfo[1]);
 
             Order order = new Order(name, quantity);
-            addOrderToRepository(order);
+            saveToRepository(order);
         }
     }
 
-    private void addOrderToRepository(Order order) {
+    private void saveToRepository(Order order) {
         if (order != null) {
             orderRepository.addOrder(order);
         }
