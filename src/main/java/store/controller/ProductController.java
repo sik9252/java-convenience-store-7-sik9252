@@ -12,8 +12,8 @@ public class ProductController {
         this.productService = productService;
     }
 
-    public void createProductsFromResource(String filename) {
-        productService.save(filename);
+    public void saveProducts() {
+        productService.save("products.md");
     }
 
     public String convertProductFormatToPrint() {
