@@ -13,11 +13,11 @@ public class ProductController {
     }
 
     public void createProductsFromResource(String filename) {
-        productService.createProductsFromResource(filename);
+        productService.save(filename);
     }
 
     public String convertProductFormatToPrint() {
-        List<Product> products = productService.getProducts();
+        List<Product> products = productService.get();
         StringBuilder result = new StringBuilder();
 
         for (Product product : products) {

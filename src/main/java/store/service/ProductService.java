@@ -14,21 +14,21 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public void createProductsFromResource(String filename) {
+    public void save(String filename) {
         List<String> lines = FileUtils.readFile(filename);
-        lines.stream().skip(1).forEach(this::addCreatedProduct);
+        lines.stream().skip(1).forEach(this::create);
     }
 
-    public List<Product> getProducts() {
+    public List<Product> get() {
         return productRepository.getProducts();
     }
 
-    private void addCreatedProduct(String line) {
-        Product product = createProduct(line);
-        addProductToRepository(product);
+    private void create(String line) {
+        Product product = process(line);
+        saveToRepository(product);
     }
 
-    private Product createProduct(String line) {
+    private Product process(String line) {
         String[] productInfo = StringUtils.splitStringWithComma(line);
 
         String name = productInfo[0];
@@ -43,7 +43,7 @@ public class ProductService {
         return new Product(name, price, quantity, promotion);
     }
 
-    private void addProductToRepository(Product product) {
+    private void saveToRepository(Product product) {
         if (product != null) {
             productRepository.addProduct(product);
         }
