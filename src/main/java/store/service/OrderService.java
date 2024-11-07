@@ -2,6 +2,7 @@ package store.service;
 
 import store.implement.OrderRepositoryImpl;
 import store.model.Order;
+import store.utils.StringUtils;
 
 import java.util.List;
 
@@ -17,13 +18,13 @@ public class OrderService {
     }
 
     public void createOrder(String input) {
-        String[] orders = input.split(",");
+        String[] orderInfo = StringUtils.splitStringWithComma(input);
 
-        for (String item : orders) {
-            String[] orderInfo = item.replace("[", "").replace("]", "").
+        for (String info : orderInfo) {
+            String[] processedInfo = info.replace("[", "").replace("]", "").
                     split("-");
-            String name = orderInfo[0];
-            int quantity = Integer.parseInt(orderInfo[1]);
+            String name = processedInfo[0];
+            int quantity = Integer.parseInt(processedInfo[1]);
 
             Order order = new Order(name, quantity);
             addOrderToRepository(order);

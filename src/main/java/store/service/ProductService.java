@@ -2,6 +2,7 @@ package store.service;
 
 import store.implement.ProductRepositoryImpl;
 import store.model.Product;
+import store.utils.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,15 +49,15 @@ public class ProductService {
     }
 
     private Product createProduct(String line) {
-        String[] info = line.split(",");
+        String[] productInfo = StringUtils.splitStringWithComma(line);
 
-        String name = info[0];
-        int price = Integer.parseInt(info[1]);
-        int quantity = Integer.parseInt(info[2]);
+        String name = productInfo[0];
+        int price = Integer.parseInt(productInfo[1]);
+        int quantity = Integer.parseInt(productInfo[2]);
         String promotion = null;
 
-        if (!info[3].trim().equals("null")) {
-            promotion = info[3];
+        if (!productInfo[3].trim().equals("null")) {
+            promotion = productInfo[3];
         }
 
         return new Product(name, price, quantity, promotion);
