@@ -1,32 +1,51 @@
 package store.controller;
 
-import store.factory.OrderFactory;
-import store.factory.ProductFactory;
-import store.factory.PromotionFactory;
+import store.implement.OrderRepositoryImpl;
+import store.implement.ProductRepositoryImpl;
+import store.implement.PromotionRepositoryImpl;
+import store.service.OrderService;
 import store.service.ProductService;
 import store.service.PromotionService;
 import store.view.InputView;
 import store.view.OutputView;
 
 public class StoreController {
-    private final InputView inputView;
-    private final OutputView outputView;
-    private final OrderController orderController;
+    private final ProductRepositoryImpl productRepository;
+    private final PromotionRepositoryImpl promotionRepository;
+    private final OrderRepositoryImpl orderRepository;
+
     private final ProductService productService;
     private final PromotionService promotionService;
+    private final OrderService orderService;
+
+    private final ProductController productController;
+    private final PromotionController promotionController;
+    private final OrderController orderController;
+
+    private final InputView inputView;
+    private final OutputView outputView;
 
     public StoreController() {
-        productService = ProductFactory.createProductService();
-        promotionService = PromotionFactory.createPromotionService();
-        ProductController productController = new ProductController(productService);
-        orderController = OrderFactory.createOrderController();
-        outputView = new OutputView(productController);
+        productRepository = new ProductRepositoryImpl();
+        orderRepository = new OrderRepositoryImpl();
+        promotionRepository = new PromotionRepositoryImpl();
+
         inputView = new InputView();
+
+        productService = new ProductService(productRepository);
+        promotionService = new PromotionService(promotionRepository);
+        orderService = new OrderService(productRepository, promotionRepository, orderRepository);
+
+        productController = new ProductController(productService);
+        promotionController = new PromotionController(promotionService);
+        orderController = new OrderController(inputView, orderService);
+
+        outputView = new OutputView(productController);
     }
 
     public void run() {
-        productService.save("products.md");
-        promotionService.save("promotions.md");
+        productController.saveProducts();
+        promotionController.savePromotion();
         outputView.printWelcome();
         outputView.printProducts();
         orderController.order();
