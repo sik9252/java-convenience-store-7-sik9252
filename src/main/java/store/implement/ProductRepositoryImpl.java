@@ -15,7 +15,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> getAllProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 }

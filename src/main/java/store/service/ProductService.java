@@ -26,7 +26,7 @@ public class ProductService {
     }
 
     public List<Product> getProducts() {
-        return productRepositoryImpl.getAllProducts();
+        return productRepositoryImpl.getProducts();
     }
 
     private List<String> readFileFromLines(String filename) {
