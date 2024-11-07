@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 import static store.exception.ErrorMessage.FAILED_READ_FILE;
 
 public class ProductService {
-    private final ProductRepositoryImpl productRepositoryImpl;
+    private final ProductRepositoryImpl productRepository;
 
-    public ProductService(ProductRepositoryImpl productRepositoryImpl) {
-        this.productRepositoryImpl = productRepositoryImpl;
+    public ProductService(ProductRepositoryImpl productRepository) {
+        this.productRepository = productRepository;
     }
 
     public void createProductsFromResource(String filename) {
@@ -26,7 +26,7 @@ public class ProductService {
     }
 
     public List<Product> getProducts() {
-        return productRepositoryImpl.getProducts();
+        return productRepository.getProducts();
     }
 
     private List<String> readFileFromLines(String filename) {
@@ -64,7 +64,7 @@ public class ProductService {
 
     private void addProductToRepository(Product product) {
         if (product != null) {
-            productRepositoryImpl.addProduct(product);
+            productRepository.addProduct(product);
         }
     }
 }
