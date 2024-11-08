@@ -23,6 +23,14 @@ public class ProductService {
         return productRepository.getProducts();
     }
 
+    public int getProductPrice(String productName) {
+        return productRepository.getProductPrice(productName);
+    }
+
+    public String getProductPromotion(String productName) {
+        return productRepository.getProductPromotion(productName);
+    }
+
     private void create(String line) {
         Product product = process(line);
         saveToRepository(product);
