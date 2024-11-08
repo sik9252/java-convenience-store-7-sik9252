@@ -26,4 +26,20 @@ public class PromotionRepositoryImpl implements PromotionRepository {
                 .map(promotion -> new int[]{promotion.getBuy(), promotion.getGet()})
                 .orElse(null);
     }
+
+    public String getStartDate(String promotionName) {
+        return promotions.stream()
+                .filter(promotion -> promotion.getName().equals(promotionName))
+                .findFirst()
+                .map(Promotion::getStartDate)
+                .orElse("");
+    }
+
+    public String getEndDate(String promotionName) {
+        return promotions.stream()
+                .filter(promotion -> promotion.getName().equals(promotionName))
+                .findFirst()
+                .map(Promotion::getEndDate)
+                .orElse("");
+    }
 }
