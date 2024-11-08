@@ -18,4 +18,12 @@ public class PromotionRepositoryImpl implements PromotionRepository {
     public List<Promotion> getPromotions() {
         return promotions;
     }
+
+    public int[] getPromotionBenefit(String promotionName) {
+        return promotions.stream()
+                .filter(promotion -> promotion.getName().equals(promotionName))
+                .findFirst()
+                .map(promotion -> new int[]{promotion.getBuy(), promotion.getGet()})
+                .orElse(null);
+    }
 }
