@@ -1,11 +1,15 @@
 package store.service;
 
+import store.exception.CustomException;
 import store.implement.ProductRepositoryImpl;
 import store.model.Product;
 import store.utils.FileUtils;
 import store.utils.StringUtils;
 
 import java.util.List;
+
+import static store.exception.ErrorMessage.EXCEEDED_STOCK_QUANTITY;
+import static store.exception.ErrorMessage.PRODUCT_NOT_EXIST;
 
 public class ProductService {
     private final ProductRepositoryImpl productRepository;
@@ -29,6 +33,18 @@ public class ProductService {
 
     public String getProductPromotion(String productName) {
         return productRepository.getProductPromotion(productName);
+    }
+
+    public void checkProductExist(String productName) {
+        if (!productRepository.isProductExist(productName)) {
+            throw new CustomException(PRODUCT_NOT_EXIST.getMessage());
+        }
+    }
+
+    public void checkQuantityAvailableToBuy(String productName, int quantityToBuy) {
+        if (!productRepository.isQuantityAvailable(productName, quantityToBuy)) {
+            throw new CustomException(EXCEEDED_STOCK_QUANTITY.getMessage());
+        }
     }
 
     private void create(String line) {
