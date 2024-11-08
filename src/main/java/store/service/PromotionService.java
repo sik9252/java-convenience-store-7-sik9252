@@ -5,6 +5,8 @@ import store.model.Promotion;
 import store.utils.FileUtils;
 import store.utils.StringUtils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class PromotionService {
@@ -25,6 +27,29 @@ public class PromotionService {
 
     public int[] getBenefitOfPromotion(String promotionName) {
         return promotionRepository.getPromotionBenefit(promotionName);
+    }
+
+    public String getStartDateOfPromotion(String promotionName) {
+        return promotionRepository.getStartDate(promotionName);
+    }
+
+    public String getEndDateOfPromotion(String promotionName) {
+        return promotionRepository.getEndDate(promotionName);
+    }
+
+    public int[] getPromotionInfo(String promotionName) {
+        if (promotionName != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate startDate = LocalDate.parse(getStartDateOfPromotion(promotionName), formatter);
+            LocalDate endDate = LocalDate.parse(getEndDateOfPromotion(promotionName), formatter);
+            LocalDate today = LocalDate.now();
+
+            if (!today.isBefore(startDate) && !today.isAfter(endDate)) {
+                return getBenefitOfPromotion(promotionName);
+            }
+        }
+
+        return null;
     }
 
     private void create(String line) {
