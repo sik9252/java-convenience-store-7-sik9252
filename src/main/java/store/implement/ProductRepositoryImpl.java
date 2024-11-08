@@ -60,14 +60,21 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     public void decreaseProductQuantity(String productName, int quantityToDecrease) {
-        products.stream()
-                .filter(product -> product.getName().equals(productName))
-                .findFirst()
-                .ifPresent(product -> {
-                    int newQuantity = product.getQuantity() - quantityToDecrease;
-                    if (newQuantity >= 0) {
-                        product.setQuantity(newQuantity);
-                    }
-                });
+        for (Product product : products) {
+            if (!product.getName().equals(productName)) {
+                continue;
+            }
+
+            int currentQuantity = product.getQuantity();
+            int newQuantity = currentQuantity - quantityToDecrease;
+
+            if (newQuantity >= 0) {
+                product.setQuantity(newQuantity);
+                break;
+            }
+
+            product.setQuantity(0);
+            quantityToDecrease -= currentQuantity;
+        }
     }
 }
