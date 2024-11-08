@@ -8,8 +8,8 @@ public class InputView {
         return Console.readLine();
     }
 
-    public String getAnswerToPromotionInfo(String productName, int freeQuantity) {
-        System.out.println("\n" + "현재 " + productName + "은(는) " + freeQuantity + "개를 무료로 더 받을 수 있습니다. " +
+    public String getAnswerToPromotionInfo(String productName) {
+        System.out.println("\n" + "현재 " + productName + "은(는) " + "1개를 무료로 더 받을 수 있습니다. " +
                 "추가하시겠습니까? (Y/N)");
         return Console.readLine();
     }
