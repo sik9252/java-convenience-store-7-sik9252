@@ -23,6 +23,10 @@ public class PromotionService {
         return promotionRepository.getPromotions();
     }
 
+    public int[] getBenefitOfPromotion(String promotionName) {
+        return promotionRepository.getPromotionBenefit(promotionName);
+    }
+
     private void create(String line) {
         Promotion promotion = process(line);
         saveToRepository(promotion);
