@@ -38,7 +38,7 @@ public class StoreController {
 
         productController = new ProductController(productService);
         promotionController = new PromotionController(promotionService);
-        orderController = new OrderController(inputView, orderService);
+        orderController = new OrderController(inputView, orderService, productService);
 
         outputView = new OutputView(productController);
     }
