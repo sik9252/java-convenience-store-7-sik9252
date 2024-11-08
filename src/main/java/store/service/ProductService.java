@@ -31,8 +31,16 @@ public class ProductService {
         return productRepository.getProductPrice(productName);
     }
 
+    public int getProductQuantity(String productName) {
+        return productRepository.getProductQuantity(productName);
+    }
+
     public String getProductPromotion(String productName) {
         return productRepository.getProductPromotion(productName);
+    }
+
+    public void decreaseProductQuantity(String productName, int quantity) {
+        productRepository.decreaseProductQuantity(productName, quantity);
     }
 
     public void checkProductExist(String productName) {

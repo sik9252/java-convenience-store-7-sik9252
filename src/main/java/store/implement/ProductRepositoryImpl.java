@@ -5,6 +5,7 @@ import store.repository.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ProductRepositoryImpl implements ProductRepository {
     private final List<Product> products = new ArrayList<>();
@@ -41,11 +42,32 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .orElse(0);
     }
 
+    public int getProductQuantity(String productName) {
+        return products.stream()
+                .filter(product -> product.getName().equals(productName))
+                .map(Product::getQuantity)
+                .findFirst()
+                .orElse(0);
+    }
+
     public String getProductPromotion(String productName) {
         return products.stream()
                 .filter(product -> product.getName().equals(productName))
                 .map(Product::getPromotion)
+                .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
+    }
+
+    public void decreaseProductQuantity(String productName, int quantityToDecrease) {
+        products.stream()
+                .filter(product -> product.getName().equals(productName))
+                .findFirst()
+                .ifPresent(product -> {
+                    int newQuantity = product.getQuantity() - quantityToDecrease;
+                    if (newQuantity >= 0) {
+                        product.setQuantity(newQuantity);
+                    }
+                });
     }
 }

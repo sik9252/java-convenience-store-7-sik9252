@@ -2,12 +2,14 @@ package store.controller;
 
 import store.exception.CustomException;
 import store.model.Order;
+import store.model.Product;
 import store.service.OrderService;
 import store.service.ProductService;
 import store.service.PromotionService;
 import store.utils.StringUtils;
 import store.view.InputView;
 
+import java.util.List;
 import java.util.Objects;
 
 import static store.exception.ErrorMessage.INVALID_INPUT;
@@ -77,6 +79,12 @@ public class OrderController {
 
             createOrder(productName, price, requestQuantity);
         }
+
+        // 지울것
+        List<Order> buy = orderService.getBuyOrders();
+        List<Order> pro = orderService.getPromotionOrders();
+        System.out.println(buy);
+        System.out.println(pro);
     }
 
     private void createOrder(String productName, int price, int requestQuantity) {
@@ -211,7 +219,12 @@ public class OrderController {
 
     public void createBuyOrder(String name, int price, int buyQuantity) {
         Order buyOrder = new Order(name, price, buyQuantity);
+        productService.decreaseProductQuantity(name, buyQuantity);
         orderService.saveBuyOrderToRepository(buyOrder);
+
+        // 지울것
+        List<Product> products = productService.get();
+        System.out.println(products);
     }
 
     public void createPromotionOrder(String name, int price, int freeQuantity) {
