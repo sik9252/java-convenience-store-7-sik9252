@@ -48,7 +48,21 @@ public class OrderController {
         String input = inputView.getOrders();
         checkInputIsEmpty(input);
         checkInputHasValidFormat(input);
+        checkProductAvailableToBuy(input);
         createOrdersFromUserInput(input);
+    }
+
+    private void checkProductAvailableToBuy(String input) {
+        String[] userOrder = StringUtils.splitStringWithComma(input);
+
+        for (String order : userOrder) {
+            String[] processedInfo = order.replace("[", "").replace("]", "").
+                    split("-");
+            String productName = processedInfo[0];
+            int requestQuantity = Integer.parseInt(processedInfo[1]);
+
+            checkProduct(productName, requestQuantity);
+        }
     }
 
     private void createOrdersFromUserInput(String input) {
@@ -61,7 +75,6 @@ public class OrderController {
             int price = productService.getProductPrice(productName);
             int requestQuantity = Integer.parseInt(processedInfo[1]);
 
-            checkProduct(productName, requestQuantity);
             createOrder(productName, price, requestQuantity);
         }
     }
