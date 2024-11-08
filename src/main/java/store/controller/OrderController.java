@@ -67,6 +67,15 @@ public class OrderController {
     }
 
     private void createOrder(String productName, int price, int requestQuantity) {
+        if (getPromotionInfo(productName) == null) {
+            createBuyOrder(productName, price, requestQuantity);
+            return;
+        }
+
+        createOrderWhenPromotionIsProgressing(productName, price, requestQuantity);
+    }
+
+    private void createOrderWhenPromotionIsProgressing(String productName, int price, int requestQuantity) {
         int buy = Objects.requireNonNull(getPromotionInfo(productName))[0];
         int get = Objects.requireNonNull(getPromotionInfo(productName))[1];
         int diff = (((requestQuantity / (buy + get)) + 1) * (buy + get)) - requestQuantity;
@@ -161,12 +170,7 @@ public class OrderController {
 
     private int[] getPromotionInfo(String productName) {
         String promotionName = productService.getProductPromotion(productName);
-
-        if (promotionName != null) {
-            return promotionService.getBenefitOfPromotion(promotionName);
-        }
-
-        return null;
+        return promotionService.getPromotionInfo(promotionName);
     }
 
     private void checkProduct(String productName, int requestQuantity) {
@@ -198,7 +202,7 @@ public class OrderController {
     }
 
     public void createPromotionOrder(String name, int price, int freeQuantity) {
-            Order promotionOrder = new Order(name, price, freeQuantity);
-            orderService.savePromotionOrderToRepository(promotionOrder);
+        Order promotionOrder = new Order(name, price, freeQuantity);
+        orderService.savePromotionOrderToRepository(promotionOrder);
     }
 }
