@@ -34,11 +34,11 @@ public class StoreController {
 
         productService = new ProductService(productRepository);
         promotionService = new PromotionService(promotionRepository);
-        orderService = new OrderService(productRepository, promotionRepository, orderRepository);
+        orderService = new OrderService(orderRepository);
 
         productController = new ProductController(productService);
         promotionController = new PromotionController(promotionService);
-        orderController = new OrderController(inputView, orderService, productService);
+        orderController = new OrderController(inputView, orderService, productService, promotionService);
 
         outputView = new OutputView(productController);
     }
