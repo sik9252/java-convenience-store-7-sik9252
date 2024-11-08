@@ -33,9 +33,19 @@ public class ProductRepositoryImpl implements ProductRepository {
         return totalQuantity >= quantityToBuy;
     }
 
-    public boolean isPromotionalProduct(String name) {
+    public int getProductPrice(String productName) {
         return products.stream()
-                .filter(product -> product.getName().equals(name))
-                .anyMatch(product -> product.getPromotion() != null);
+                .filter(product -> product.getName().equals(productName))
+                .map(Product::getPrice)
+                .findFirst()
+                .orElse(0);
+    }
+
+    public String getProductPromotion(String productName) {
+        return products.stream()
+                .filter(product -> product.getName().equals(productName))
+                .map(Product::getPromotion)
+                .findFirst()
+                .orElse(null);
     }
 }
