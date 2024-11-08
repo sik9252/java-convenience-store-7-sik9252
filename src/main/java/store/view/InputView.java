@@ -13,4 +13,10 @@ public class InputView {
                 "추가하시겠습니까? (Y/N)");
         return Console.readLine();
     }
+
+    public String getAnswerToPromotionIsOutOfStock(String productName, int quantity) {
+        System.out.println("\n" + "현재 " + productName + " " + quantity + "개는 " + "프로모션 할인이 적용되지 않습니다. " +
+                "그래도 구매하시겠습니까? (Y/N)");
+        return Console.readLine();
+    }
 }
