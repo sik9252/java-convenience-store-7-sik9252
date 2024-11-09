@@ -2,7 +2,7 @@ package store.controller;
 
 import store.exception.CustomException;
 import store.model.Order;
-import store.service.DiscountService;
+import store.service.MemberShipDiscountService;
 import store.service.OrderService;
 import store.service.ProductService;
 import store.service.PromotionService;
@@ -24,7 +24,7 @@ public class OrderController {
     private final OrderService orderService;
     private final ProductService productService;
     private final PromotionService promotionService;
-    private final DiscountService discountService;
+    private final MemberShipDiscountService memberShipDiscountService;
     private final ReceiptService receiptService;
 
     public OrderController(
@@ -32,13 +32,13 @@ public class OrderController {
             OrderService orderService,
             ProductService productService,
             PromotionService promotionService,
-            DiscountService discountService,
+            MemberShipDiscountService memberShipDiscountService,
             ReceiptService receiptService) {
         this.inputView = inputView;
         this.orderService = orderService;
         this.productService = productService;
         this.promotionService = promotionService;
-        this.discountService = discountService;
+        this.memberShipDiscountService = memberShipDiscountService;
         this.receiptService = receiptService;
     }
 
@@ -102,26 +102,19 @@ public class OrderController {
             try {
                 String input = inputView.getAnswerToMemberShipDiscount();
                 checkIsValidAnswerToPromotionInfo(input);
-
-                if (input.equals("Y")) {
-                    List<Order> list = orderService.getNotPromotionProduct();
-
-                    int totalPrice = list.stream()
-                            .mapToInt(Order::getTotalPrice)
-                            .sum();
-
-                    int discountPrice = (int) (totalPrice * 0.3);
-                    discountPrice = Math.min(discountPrice, 8000);
-
-                    discountService.setDiscountPrice(discountPrice);
-                }
-
+                calcDiscountWhenAnswerIsYes(input);
                 break;
             } catch (CustomException e) {
                 System.out.println(e.getMessage());
             }
         }
+    }
 
+    private void calcDiscountWhenAnswerIsYes(String input) {
+        if (input.equals("Y")) {
+            List<Order> list = orderService.getNotPromotionProduct();
+            memberShipDiscountService.calculateDiscountPrice(list);
+        }
     }
 
     private void checkProductAvailableToBuy(String input) {
