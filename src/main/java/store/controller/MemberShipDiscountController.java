@@ -26,7 +26,7 @@ public class MemberShipDiscountController {
         while (true) {
             try {
                 String input = inputView.getAnswerToMemberShipDiscount();
-                checkIsValidAnswerToPromotionInfo(input);
+                orderService.checkIsValidAnswerToPromotionInfo(input);
                 calcDiscountWhenAnswerIsYes(input);
                 break;
             } catch (CustomException e) {
@@ -39,12 +39,6 @@ public class MemberShipDiscountController {
         if (input.equals("Y")) {
             List<Order> list = orderService.getNotPromotionProduct();
             memberShipDiscountService.calculateDiscountPrice(list);
-        }
-    }
-
-    private void checkIsValidAnswerToPromotionInfo(String input) {
-        if (!input.equals("Y") && !input.equals("N")) {
-            throw new CustomException(INVALID_INPUT.getMessage());
         }
     }
 }
