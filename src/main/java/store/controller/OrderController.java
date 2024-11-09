@@ -60,6 +60,41 @@ public class OrderController {
         checkProductAvailableToBuy(input);
         createOrdersFromUserInput(input);
         discountWithMemberShip();
+        makeReceipt();
+    }
+
+    private void makeReceipt() {
+        receiptService.calcTotalOrderPrice();
+        receiptService.calcTotalPromotionPrice();
+        receiptService.calcTotalDiscountPrice();
+        receiptService.calcTotalPurchasePrice();
+
+        List<Order> buyOrders = orderService.getBuyOrders();
+        List<Order> promotionOrders = orderService.getPromotionOrders();
+
+        int totalOrderPrice = receiptService.getTotalOrderPrice();
+        int totalPromotionPrice = receiptService.getTotalPromotionPrice();
+        int totalDiscountPrice = receiptService.getTotalDiscountPrice();
+        int totalPurchasePrice = receiptService.getTotalPurchasePrice();
+
+        System.out.println("\n==============W 편의점================");
+        System.out.printf("%-13s\t%5s\t%7s\n", "상품명", "수량", "금액");
+
+        for (Order order : buyOrders) {
+            System.out.printf("%-13s\t%5d\t%,10d\n", order.getName(), order.getQuantity(), order.getTotalPrice());
+        }
+
+        System.out.println("=============증    정===============");
+        for (Order order : promotionOrders) {
+            System.out.printf("%-13s\t%5s\n", order.getName(), order.getQuantity());
+        }
+
+        System.out.println("====================================");
+        System.out.printf("%-13s\t%5s\t%,10d\n", "총구매액", buyOrders.stream().mapToInt(Order::getQuantity).sum(),
+                totalOrderPrice);
+        System.out.printf("%-13s\t%18s\n", "행사할인", String.format("-%,d", totalPromotionPrice));
+        System.out.printf("%-13s\t%18s\n", "멤버십할인", String.format("-%,d", totalDiscountPrice));
+        System.out.printf("%-13s\t%,18d\n", "내실돈", totalPurchasePrice);
     }
 
     private void discountWithMemberShip() {
