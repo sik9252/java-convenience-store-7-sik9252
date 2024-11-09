@@ -11,18 +11,16 @@ import java.util.List;
 
 public class PromotionService {
     private final PromotionRepositoryImpl promotionRepository;
+    private final ProductService productService;
 
-    public PromotionService(PromotionRepositoryImpl promotionRepository) {
+    public PromotionService(PromotionRepositoryImpl promotionRepository, ProductService productService) {
         this.promotionRepository = promotionRepository;
+        this.productService = productService;
     }
 
     public void save(String filename) {
         List<String> lines = FileUtils.readFile(filename);
         lines.stream().skip(1).forEach(this::create);
-    }
-
-    public List<Promotion> get() {
-        return promotionRepository.getPromotions();
     }
 
     public int[] getBenefitOfPromotion(String promotionName) {
@@ -37,7 +35,12 @@ public class PromotionService {
         return promotionRepository.getEndDate(promotionName);
     }
 
-    public int[] getPromotionInfo(String promotionName) {
+    public int[] getPromotionInfo(String productName) {
+        String promotionName = productService.getProductPromotion(productName);
+        return checkPromotionIsAvailable(promotionName);
+    }
+
+    private int[] checkPromotionIsAvailable(String promotionName) {
         if (promotionName != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate startDate = LocalDate.parse(getStartDateOfPromotion(promotionName), formatter);
