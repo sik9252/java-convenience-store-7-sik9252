@@ -8,8 +8,6 @@ import store.view.InputView;
 
 import java.util.List;
 
-import static store.exception.ErrorMessage.INVALID_INPUT;
-
 public class MemberShipDiscountController {
     private final OrderService orderService;
     private final MemberShipDiscountService memberShipDiscountService;
@@ -28,6 +26,7 @@ public class MemberShipDiscountController {
                 String input = inputView.getAnswerToMemberShipDiscount();
                 orderService.checkIsValidAnswerToPromotionInfo(input);
                 calcDiscountWhenAnswerIsYes(input);
+                calcDiscountWhenAnswerIsNo(input);
                 break;
             } catch (CustomException e) {
                 System.out.println(e.getMessage());
@@ -39,6 +38,12 @@ public class MemberShipDiscountController {
         if (input.equals("Y")) {
             List<Order> list = orderService.getNotPromotionProduct();
             memberShipDiscountService.calculateDiscountPrice(list);
+        }
+    }
+
+    private void calcDiscountWhenAnswerIsNo(String input) {
+        if (input.equals("N")) {
+            memberShipDiscountService.setDiscountPrice(0);
         }
     }
 }
