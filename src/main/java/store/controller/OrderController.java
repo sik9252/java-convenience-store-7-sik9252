@@ -1,14 +1,11 @@
 package store.controller;
 
 import store.exception.CustomException;
-import store.model.Order;
 import store.service.OrderService;
 import store.service.ProductService;
 import store.service.PromotionService;
 import store.utils.StringUtils;
 import store.view.InputView;
-
-import java.util.Objects;
 
 import static store.exception.ErrorMessage.INVALID_INPUT;
 import static store.exception.ErrorMessage.INVALID_PURCHASE_FORMAT;
@@ -79,44 +76,23 @@ public class OrderController {
     }
 
     private void createOrder(String productName, int price, int requestQuantity) {
-        if (getPromotionInfo(productName) == null) {
-            createBuyOrder(productName, price, requestQuantity);
+        if (promotionService.getPromotionInfo(productName) == null) {
+            orderService.createBuyOrder(productName, price, requestQuantity);
             return;
         }
 
-        createOrderWhenPromotionIsProgressing(productName, price, requestQuantity);
+        createOrderWhenPromotionIsExist(productName, price, requestQuantity);
     }
 
-    private void createOrderWhenPromotionIsProgressing(String productName, int price, int requestQuantity) {
-        int buy = Objects.requireNonNull(getPromotionInfo(productName))[0];
-        int get = Objects.requireNonNull(getPromotionInfo(productName))[1];
+    private void createOrderWhenPromotionIsExist(String productName, int price, int requestQuantity) {
+        int buy = promotionService.getPromotionInfo(productName)[0];
+        int get = promotionService.getPromotionInfo(productName)[1];
         int diff = (((requestQuantity / (buy + get)) + 1) * (buy + get)) - requestQuantity;
         int freeQuantity = requestQuantity / (buy + get);
         int possibleQuantityToBuyPromotion = productService.getProductQuantity(productName);
 
         if (possibleQuantityToBuyPromotion < requestQuantity + freeQuantity) {
-            int canBuy = 0;
-            int calc = ((requestQuantity / (buy + get))) * (buy + get);
-
-            if (calc < possibleQuantityToBuyPromotion) {
-                canBuy = calc;
-            }
-
-            if (calc >= possibleQuantityToBuyPromotion) {
-                canBuy = (((possibleQuantityToBuyPromotion / (buy + get))) * (buy + get));
-            }
-
-            int exceedQuantity = requestQuantity - canBuy;
-
-            while (true) {
-                try {
-                    tryInputByExceed(productName, price, requestQuantity, exceedQuantity, canBuy, buy, get);
-                    break;
-                } catch (CustomException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-
+            handleInsufficientStock(productName, price, requestQuantity, buy, get, possibleQuantityToBuyPromotion);
             return;
         }
 
@@ -128,13 +104,38 @@ public class OrderController {
         createOrderWhenPromotionIsTwoPlusOne(productName, price, requestQuantity, diff, freeQuantity, buy, get);
     }
 
+    private void handleInsufficientStock(String productName, int price, int requestQuantity,
+                                         int buy, int get, int possibleQuantityToBuyPromotion) {
+        int canBuy = calculateCanBuyQuantity(requestQuantity, buy, get, possibleQuantityToBuyPromotion);
+        int exceedQuantity = requestQuantity - canBuy;
+
+        while (true) {
+            try {
+                tryInputByExceed(productName, price, requestQuantity, exceedQuantity, canBuy, buy, get);
+                break;
+            } catch (CustomException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private int calculateCanBuyQuantity(int requestQuantity, int buy, int get, int possibleQuantityToBuyPromotion) {
+        int calc = ((requestQuantity / (buy + get))) * (buy + get);
+        if (calc < possibleQuantityToBuyPromotion) {
+            return calc;
+        }
+        return (((possibleQuantityToBuyPromotion / (buy + get))) * (buy + get));
+    }
+
     private void tryInputByExceed(String productName, int price, int requestQuantity,
                                   int exceedQuantity, int canBuy, int buy, int get) {
         String input = inputView.getAnswerToPromotionIsOutOfStock(productName, exceedQuantity);
 
-        checkIsValidAnswerToPromotionInfo(input);
-        createOrderWhenAnswerIsYes(input, productName, price, requestQuantity, canBuy / (buy + get));
-        createOrderWhenAnswerIsNo(input, productName, price, requestQuantity, canBuy / (buy + get), buy);
+        orderService.checkIsValidAnswerToPromotionInfo(input);
+        orderService.createOrderWhenAnswerIsYes(input, productName, price, requestQuantity,
+                canBuy / (buy + get));
+        orderService.createOrderWhenAnswerIsNo(input, productName, price, requestQuantity,
+                canBuy / (buy + get), buy);
     }
 
     private void createOrderWhenPromotionIsTwoPlusOne(String productName, int price, int requestQuantity, int diff,
@@ -163,8 +164,8 @@ public class OrderController {
     private void createOrderWhenZeroRemainder(String productName, int price, int requestQuantity, int freeQuantity,
                                               int buy, int get) {
         if (requestQuantity % (buy + get) == 0) {
-            createBuyOrder(productName, price, requestQuantity);
-            createPromotionOrder(productName, price, freeQuantity);
+            orderService.createBuyOrder(productName, price, requestQuantity);
+            orderService.createPromotionOrder(productName, price, freeQuantity);
         }
     }
 
@@ -183,42 +184,29 @@ public class OrderController {
     private void tryInputByPromotion(String productName, int price, int requestQuantity,
                                      int freeQuantity, int buy) {
         String input = inputView.getAnswerToPromotionInfo(productName);
+        orderService.checkIsValidAnswerToPromotionInfo(input);
 
-        checkIsValidAnswerToPromotionInfo(input);
-        createOrderWhenAnswerIsYes(input, productName, price, requestQuantity + 1,
-                freeQuantity + 1);
-        createOrderWhenAnswerIsNo(input, productName, price, requestQuantity, freeQuantity, buy);
-    }
+        if (requestQuantity == 2) {
+            orderService.createOrderWhenAnswerIsYes(input, productName, price, requestQuantity + 1,
+                    freeQuantity);
 
-    private void createOrderWhenAnswerIsYes(String input, String productName, int price, int requestQuantity,
-                                            int freeQuantity) {
-        if (input.equals("Y")) {
-            createBuyOrder(productName, price, requestQuantity);
-            createPromotionOrder(productName, price, freeQuantity);
         }
-    }
 
-    private void createOrderWhenAnswerIsNo(String input, String productName, int price, int requestQuantity,
-                                           int freeQuantity, int buy) {
-        if (input.equals("N")) {
-            createBuyOrder(productName, price, requestQuantity);
-            if (requestQuantity != buy) {
-                createPromotionOrder(productName, price, freeQuantity);
-            }
+        if (requestQuantity != 2) {
+            orderService.createOrderWhenAnswerIsYes(input, productName, price, requestQuantity + 1,
+                    freeQuantity + 1);
+
         }
+
+        orderService.createOrderWhenAnswerIsNo(input, productName, price, requestQuantity, freeQuantity, buy);
     }
 
     private void createOrderWhenDiffIsTwo(String productName, int price, int requestQuantity, int freeQuantity,
                                           int buy) {
-        createBuyOrder(productName, price, requestQuantity);
+        orderService.createBuyOrder(productName, price, requestQuantity);
         if (requestQuantity != buy) {
-            createPromotionOrder(productName, price, freeQuantity);
+            orderService.createPromotionOrder(productName, price, freeQuantity);
         }
-    }
-
-    private int[] getPromotionInfo(String productName) {
-        String promotionName = productService.getProductPromotion(productName);
-        return promotionService.getPromotionInfo(promotionName);
     }
 
     private void checkProduct(String productName, int requestQuantity) {
@@ -235,25 +223,6 @@ public class OrderController {
     private void checkInputHasValidFormat(String input) {
         if (!input.matches(PATTERN)) {
             throw new CustomException(INVALID_PURCHASE_FORMAT.getMessage() + "\n");
-        }
-    }
-
-    private void checkIsValidAnswerToPromotionInfo(String input) {
-        if (!input.equals("Y") && !input.equals("N")) {
-            throw new CustomException(INVALID_INPUT.getMessage());
-        }
-    }
-
-    public void createBuyOrder(String name, int price, int buyQuantity) {
-        Order buyOrder = new Order(name, price, buyQuantity);
-        productService.decreaseProductQuantity(name, buyQuantity);
-        orderService.saveBuyOrderToRepository(buyOrder);
-    }
-
-    public void createPromotionOrder(String name, int price, int freeQuantity) {
-        if (freeQuantity > 0) {
-            Order promotionOrder = new Order(name, price, freeQuantity);
-            orderService.savePromotionOrderToRepository(promotionOrder);
         }
     }
 }
