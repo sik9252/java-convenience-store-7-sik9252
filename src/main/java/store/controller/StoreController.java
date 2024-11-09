@@ -32,8 +32,8 @@ public class StoreController {
         InputView inputView = new InputView();
 
         ProductService productService = new ProductService(productRepository);
-        PromotionService promotionService = new PromotionService(promotionRepository);
-        OrderService orderService = new OrderService(orderRepository);
+        PromotionService promotionService = new PromotionService(promotionRepository, productService);
+        OrderService orderService = new OrderService(orderRepository, productService);
         MemberShipDiscountService memberShipDiscountService = new MemberShipDiscountService(memberShipDiscount);
         ReceiptService receiptService = new ReceiptService(orderRepository, memberShipDiscount, receipt);
 
