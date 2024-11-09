@@ -3,42 +3,42 @@ package store.controller;
 import store.implement.OrderRepositoryImpl;
 import store.implement.ProductRepositoryImpl;
 import store.implement.PromotionRepositoryImpl;
+import store.model.Discount;
+import store.model.Receipt;
+import store.service.DiscountService;
 import store.service.OrderService;
 import store.service.ProductService;
 import store.service.PromotionService;
+import store.service.ReceiptService;
 import store.view.InputView;
 import store.view.OutputView;
 
 public class StoreController {
-    private final ProductRepositoryImpl productRepository;
-    private final PromotionRepositoryImpl promotionRepository;
-    private final OrderRepositoryImpl orderRepository;
-
-    private final ProductService productService;
-    private final PromotionService promotionService;
-    private final OrderService orderService;
-
     private final ProductController productController;
     private final PromotionController promotionController;
     private final OrderController orderController;
 
-    private final InputView inputView;
     private final OutputView outputView;
 
     public StoreController() {
-        productRepository = new ProductRepositoryImpl();
-        orderRepository = new OrderRepositoryImpl();
-        promotionRepository = new PromotionRepositoryImpl();
+        Receipt receipt = new Receipt(0, 0, 0, 0);
+        Discount discount = new Discount(0);
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        OrderRepositoryImpl orderRepository = new OrderRepositoryImpl();
+        PromotionRepositoryImpl promotionRepository = new PromotionRepositoryImpl();
 
-        inputView = new InputView();
+        InputView inputView = new InputView();
 
-        productService = new ProductService(productRepository);
-        promotionService = new PromotionService(promotionRepository);
-        orderService = new OrderService(orderRepository);
+        ProductService productService = new ProductService(productRepository);
+        PromotionService promotionService = new PromotionService(promotionRepository);
+        OrderService orderService = new OrderService(orderRepository);
+        DiscountService disCountService = new DiscountService(discount);
+        ReceiptService receiptService = new ReceiptService(orderRepository, discount, receipt);
 
         productController = new ProductController(productService);
         promotionController = new PromotionController(promotionService);
-        orderController = new OrderController(inputView, orderService, productService, promotionService);
+        orderController = new OrderController(inputView, orderService, productService, promotionService,
+                disCountService, receiptService);
 
         outputView = new OutputView(productController);
     }
