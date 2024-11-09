@@ -20,7 +20,13 @@ public class ProductService {
 
     public void save(String filename) {
         List<String> lines = FileUtils.readFile(filename);
-        lines.stream().skip(1).forEach(this::create);
+
+        for (int i = 1; i < lines.size(); i++) {
+            String currentLine = lines.get(i);
+            String nextLine = (i + 1 < lines.size()) ? lines.get(i + 1) : null;
+
+            create(currentLine, nextLine);
+        }
     }
 
     public List<Product> get() {
@@ -55,14 +61,13 @@ public class ProductService {
         }
     }
 
-    private void create(String line) {
-        Product product = process(line);
+    private void create(String line, String nextLine) {
+        Product product = process(line, nextLine);
         saveToRepository(product);
     }
 
-    private Product process(String line) {
+    private Product process(String line, String nextLine) {
         String[] productInfo = StringUtils.splitStringWithComma(line);
-
         String name = productInfo[0];
         int price = Integer.parseInt(productInfo[1]);
         int quantity = Integer.parseInt(productInfo[2]);
@@ -70,6 +75,19 @@ public class ProductService {
 
         if (!productInfo[3].trim().equals("null")) {
             promotion = productInfo[3];
+
+            if (nextLine != null) {
+                String[] nextProductInfo = StringUtils.splitStringWithComma(nextLine);
+                String nextName = nextProductInfo[0];
+
+                if (!name.equals(nextName)) {
+                    Product product1 = new Product(name, price, quantity, promotion);
+                    Product product2 = new Product(name, price, 0, null);
+                    saveToRepository(product1);
+                    saveToRepository(product2);
+                    return null;
+                }
+            }
         }
 
         return new Product(name, price, quantity, promotion);
