@@ -2,10 +2,11 @@ package store.controller;
 
 import store.exception.CustomException;
 import store.model.Order;
-import store.model.Product;
+import store.service.DiscountService;
 import store.service.OrderService;
 import store.service.ProductService;
 import store.service.PromotionService;
+import store.service.ReceiptService;
 import store.utils.StringUtils;
 import store.view.InputView;
 
@@ -23,16 +24,22 @@ public class OrderController {
     private final OrderService orderService;
     private final ProductService productService;
     private final PromotionService promotionService;
+    private final DiscountService discountService;
+    private final ReceiptService receiptService;
 
     public OrderController(
             InputView inputView,
             OrderService orderService,
             ProductService productService,
-            PromotionService promotionService) {
+            PromotionService promotionService,
+            DiscountService discountService,
+            ReceiptService receiptService) {
         this.inputView = inputView;
         this.orderService = orderService;
         this.productService = productService;
         this.promotionService = promotionService;
+        this.discountService = discountService;
+        this.receiptService = receiptService;
     }
 
     public void order() {
@@ -52,6 +59,34 @@ public class OrderController {
         checkInputHasValidFormat(input);
         checkProductAvailableToBuy(input);
         createOrdersFromUserInput(input);
+        discountWithMemberShip();
+    }
+
+    private void discountWithMemberShip() {
+        while (true) {
+            try {
+                String input = inputView.getAnswerToMemberShipDiscount();
+                checkIsValidAnswerToPromotionInfo(input);
+
+                if (input.equals("Y")) {
+                    List<Order> list = orderService.getNotPromotionProduct();
+
+                    int totalPrice = list.stream()
+                            .mapToInt(Order::getTotalPrice)
+                            .sum();
+
+                    int discountPrice = (int) (totalPrice * 0.3);
+                    discountPrice = Math.min(discountPrice, 8000);
+
+                    discountService.setDiscountPrice(discountPrice);
+                }
+
+                break;
+            } catch (CustomException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
     }
 
     private void checkProductAvailableToBuy(String input) {
@@ -79,12 +114,6 @@ public class OrderController {
 
             createOrder(productName, price, requestQuantity);
         }
-
-        // 지울것
-        List<Order> buy = orderService.getBuyOrders();
-        List<Order> pro = orderService.getPromotionOrders();
-        System.out.println(buy);
-        System.out.println(pro);
     }
 
     private void createOrder(String productName, int price, int requestQuantity) {
@@ -138,7 +167,7 @@ public class OrderController {
     }
 
     private void tryInputByExceed(String productName, int price, int requestQuantity,
-                                     int exceedQuantity, int canBuy, int buy, int get) {
+                                  int exceedQuantity, int canBuy, int buy, int get) {
         String input = inputView.getAnswerToPromotionIsOutOfStock(productName, exceedQuantity);
 
         checkIsValidAnswerToPromotionInfo(input);
@@ -158,7 +187,6 @@ public class OrderController {
             }
         }
     }
-
 
     private void createOrderWhenPromotionIsOnePlusOne(String productName, int price, int requestQuantity, int diff,
                                                       int freeQuantity, int buy, int get) {
@@ -238,13 +266,13 @@ public class OrderController {
 
     private void checkInputIsEmpty(String input) {
         if (input.isEmpty()) {
-            throw new CustomException(INVALID_INPUT.getMessage());
+            throw new CustomException(INVALID_INPUT.getMessage() + "\n");
         }
     }
 
     private void checkInputHasValidFormat(String input) {
         if (!input.matches(PATTERN)) {
-            throw new CustomException(INVALID_PURCHASE_FORMAT.getMessage());
+            throw new CustomException(INVALID_PURCHASE_FORMAT.getMessage() + "\n");
         }
     }
 
@@ -258,14 +286,12 @@ public class OrderController {
         Order buyOrder = new Order(name, price, buyQuantity);
         productService.decreaseProductQuantity(name, buyQuantity);
         orderService.saveBuyOrderToRepository(buyOrder);
-
-        // 지울것
-        List<Product> products = productService.get();
-        System.out.println(products);
     }
 
     public void createPromotionOrder(String name, int price, int freeQuantity) {
-        Order promotionOrder = new Order(name, price, freeQuantity);
-        orderService.savePromotionOrderToRepository(promotionOrder);
+        if (freeQuantity > 0) {
+            Order promotionOrder = new Order(name, price, freeQuantity);
+            orderService.savePromotionOrderToRepository(promotionOrder);
+        }
     }
 }
