@@ -32,7 +32,14 @@ public class ReceiptService {
         return receipt.getTotalPurchasePrice();
     }
 
-    public void calcTotalOrderPrice() {
+    public void calculate() {
+        calcTotalOrderPrice();
+        calcTotalPromotionPrice();
+        calcTotalDiscountPrice();
+        calcTotalPurchasePrice();
+    }
+
+    private void calcTotalOrderPrice() {
         int totalOrderPrice = orderRepository.getBuyOrders().stream()
                 .mapToInt(Order::getTotalPrice)
                 .sum();
@@ -40,7 +47,7 @@ public class ReceiptService {
         receipt.setTotalOrderPrice(totalOrderPrice);
     }
 
-    public void calcTotalPromotionPrice() {
+    private void calcTotalPromotionPrice() {
         int totalPromotionPrice = orderRepository.getPromotionOrders().stream()
                 .mapToInt(Order::getTotalPrice)
                 .sum();
@@ -48,11 +55,11 @@ public class ReceiptService {
         receipt.setTotalPromotionPrice(totalPromotionPrice);
     }
 
-    public void calcTotalDiscountPrice() {
+    private void calcTotalDiscountPrice() {
         receipt.setTotalDiscountPrice(memberShipDiscount.getDiscountPrice());
     }
 
-    public void calcTotalPurchasePrice() {
+    private void calcTotalPurchasePrice() {
         int totalOrderPrice = receipt.getTotalOrderPrice();
         int totalPromotionPrice = receipt.getTotalPromotionPrice();
         int totalDiscountPrice = memberShipDiscount.getDiscountPrice();
