@@ -1,11 +1,14 @@
 package store.service;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import store.implement.PromotionRepositoryImpl;
 import store.model.Promotion;
 import store.utils.FileUtils;
 import store.utils.StringUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -43,9 +46,10 @@ public class PromotionService {
     private int[] checkPromotionIsAvailable(String promotionName) {
         if (promotionName != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate startDate = LocalDate.parse(getStartDateOfPromotion(promotionName), formatter);
-            LocalDate endDate = LocalDate.parse(getEndDateOfPromotion(promotionName), formatter);
-            LocalDate today = LocalDate.now();
+            LocalDateTime startDate = LocalDate.parse(getStartDateOfPromotion(promotionName), formatter).atStartOfDay();
+            LocalDateTime endDate =
+                    LocalDate.parse(getEndDateOfPromotion(promotionName), formatter).atTime(LocalTime.MAX);
+            LocalDateTime today = DateTimes.now();
 
             if (!today.isBefore(startDate) && !today.isAfter(endDate)) {
                 return getBenefitOfPromotion(promotionName);
