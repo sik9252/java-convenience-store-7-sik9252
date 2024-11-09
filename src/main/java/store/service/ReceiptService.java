@@ -1,18 +1,18 @@
 package store.service;
 
 import store.implement.OrderRepositoryImpl;
-import store.model.Discount;
+import store.model.MemberShipDiscount;
 import store.model.Order;
 import store.model.Receipt;
 
 public class ReceiptService {
     private final Receipt receipt;
     private final OrderRepositoryImpl orderRepository;
-    private final Discount discount;
+    private final MemberShipDiscount memberShipDiscount;
 
-    public ReceiptService(OrderRepositoryImpl orderRepository, Discount discount, Receipt receipt) {
+    public ReceiptService(OrderRepositoryImpl orderRepository, MemberShipDiscount memberShipDiscount, Receipt receipt) {
         this.orderRepository = orderRepository;
-        this.discount = discount;
+        this.memberShipDiscount = memberShipDiscount;
         this.receipt = receipt;
     }
 
@@ -49,13 +49,13 @@ public class ReceiptService {
     }
 
     public void calcTotalDiscountPrice() {
-        receipt.setTotalDiscountPrice(discount.getDiscountPrice());
+        receipt.setTotalDiscountPrice(memberShipDiscount.getDiscountPrice());
     }
 
     public void calcTotalPurchasePrice() {
         int totalOrderPrice = receipt.getTotalOrderPrice();
         int totalPromotionPrice = receipt.getTotalPromotionPrice();
-        int totalDiscountPrice = discount.getDiscountPrice();
+        int totalDiscountPrice = memberShipDiscount.getDiscountPrice();
 
         receipt.setTotalPurchasePrice(totalOrderPrice - totalPromotionPrice - totalDiscountPrice);
     }

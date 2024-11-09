@@ -3,9 +3,9 @@ package store.controller;
 import store.implement.OrderRepositoryImpl;
 import store.implement.ProductRepositoryImpl;
 import store.implement.PromotionRepositoryImpl;
-import store.model.Discount;
+import store.model.MemberShipDiscount;
 import store.model.Receipt;
-import store.service.DiscountService;
+import store.service.MemberShipDiscountService;
 import store.service.OrderService;
 import store.service.ProductService;
 import store.service.PromotionService;
@@ -22,7 +22,7 @@ public class StoreController {
 
     public StoreController() {
         Receipt receipt = new Receipt(0, 0, 0, 0);
-        Discount discount = new Discount(0);
+        MemberShipDiscount memberShipDiscount = new MemberShipDiscount(0);
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         OrderRepositoryImpl orderRepository = new OrderRepositoryImpl();
         PromotionRepositoryImpl promotionRepository = new PromotionRepositoryImpl();
@@ -32,13 +32,13 @@ public class StoreController {
         ProductService productService = new ProductService(productRepository);
         PromotionService promotionService = new PromotionService(promotionRepository);
         OrderService orderService = new OrderService(orderRepository);
-        DiscountService disCountService = new DiscountService(discount);
-        ReceiptService receiptService = new ReceiptService(orderRepository, discount, receipt);
+        MemberShipDiscountService disCountServiceMemberShip = new MemberShipDiscountService(memberShipDiscount);
+        ReceiptService receiptService = new ReceiptService(orderRepository, memberShipDiscount, receipt);
 
         productController = new ProductController(productService);
         promotionController = new PromotionController(promotionService);
         orderController = new OrderController(inputView, orderService, productService, promotionService,
-                disCountService, receiptService);
+                disCountServiceMemberShip, receiptService);
 
         outputView = new OutputView(productController);
     }

@@ -1,9 +1,9 @@
 package store.model;
 
-public class Discount {
+public class MemberShipDiscount {
     private int discountPrice;
 
-    public Discount(int discountPrice) {
+    public MemberShipDiscount(int discountPrice) {
         this.discountPrice = discountPrice;
     }
 
