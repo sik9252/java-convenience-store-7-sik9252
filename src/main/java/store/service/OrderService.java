@@ -31,4 +31,8 @@ public class OrderService {
             orderRepository.addPromotionOrder(order);
         }
     }
+
+    public List<Order> getNotPromotionProduct() {
+        return orderRepository.getNotPromotionProduct();
+    }
 }
