@@ -1,7 +1,6 @@
 package store.view;
 
 import store.controller.ProductController;
-import store.controller.ReceiptController;
 import store.model.Order;
 
 import java.util.List;
@@ -14,7 +13,7 @@ public class OutputView {
     }
 
     public void printWelcome() {
-        System.out.println("안녕하세요. W편의점입니다.");
+        System.out.println("\n안녕하세요. W편의점입니다.");
         System.out.println("현재 보유하고 있는 상품입니다.\n");
     }
 
