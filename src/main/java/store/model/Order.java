@@ -3,13 +3,12 @@ package store.model;
 public class Order {
     private final String name;
     private final int quantity;
-    private int totalPrice;
+    private final int totalPrice;
 
     public Order(String name, int price, int quantity) {
         this.name = name;
         this.quantity = quantity;
-        this.totalPrice = 0;
-        getTotalPrice(price, quantity);
+        this.totalPrice = getTotalPrice(price, quantity);
     }
 
     public String getName() {
@@ -24,7 +23,7 @@ public class Order {
         return totalPrice;
     }
 
-    private void getTotalPrice(int price, int buyQuantity) {
-        totalPrice = buyQuantity * price;
+    private int getTotalPrice(int price, int buyQuantity) {
+        return buyQuantity * price;
     }
 }
