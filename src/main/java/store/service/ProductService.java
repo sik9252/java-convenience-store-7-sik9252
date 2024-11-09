@@ -45,13 +45,13 @@ public class ProductService {
 
     public void checkProductExist(String productName) {
         if (!productRepository.isProductExist(productName)) {
-            throw new CustomException(PRODUCT_NOT_EXIST.getMessage());
+            throw new CustomException(PRODUCT_NOT_EXIST.getMessage() + "\n");
         }
     }
 
     public void checkQuantityAvailableToBuy(String productName, int quantityToBuy) {
         if (!productRepository.isQuantityAvailable(productName, quantityToBuy)) {
-            throw new CustomException(EXCEEDED_STOCK_QUANTITY.getMessage());
+            throw new CustomException(EXCEEDED_STOCK_QUANTITY.getMessage() + "\n");
         }
     }
 
