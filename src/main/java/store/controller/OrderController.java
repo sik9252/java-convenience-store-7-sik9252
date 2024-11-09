@@ -186,13 +186,13 @@ public class OrderController {
         String input = inputView.getAnswerToPromotionInfo(productName);
         orderService.checkIsValidAnswerToPromotionInfo(input);
 
-        if (requestQuantity == 2) {
+        if (buy == 2 && requestQuantity == 2 || buy == 1 && requestQuantity == 1) {
             orderService.createOrderWhenAnswerIsYes(input, productName, price, requestQuantity + 1,
                     freeQuantity);
 
         }
 
-        if (requestQuantity != 2) {
+        if (buy == 2 && requestQuantity != 2 || buy == 1 && requestQuantity != 1) {
             orderService.createOrderWhenAnswerIsYes(input, productName, price, requestQuantity + 1,
                     freeQuantity + 1);
 
