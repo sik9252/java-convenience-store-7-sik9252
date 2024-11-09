@@ -2,20 +2,16 @@ package store.controller;
 
 import store.exception.CustomException;
 import store.model.Order;
-import store.service.MemberShipDiscountService;
 import store.service.OrderService;
 import store.service.ProductService;
 import store.service.PromotionService;
-import store.service.ReceiptService;
 import store.utils.StringUtils;
 import store.view.InputView;
 
-import java.util.List;
 import java.util.Objects;
 
 import static store.exception.ErrorMessage.INVALID_INPUT;
 import static store.exception.ErrorMessage.INVALID_PURCHASE_FORMAT;
-
 
 public class OrderController {
     private static final String PATTERN = "\\[([가-힣A-Za-z]+)-([1-9][0-9]*)](,\\[([가-힣A-Za-z]+)-([1-9][0-9]*)])*";
@@ -24,19 +20,16 @@ public class OrderController {
     private final OrderService orderService;
     private final ProductService productService;
     private final PromotionService promotionService;
-    private final MemberShipDiscountService memberShipDiscountService;
 
     public OrderController(
             InputView inputView,
             OrderService orderService,
             ProductService productService,
-            PromotionService promotionService,
-            MemberShipDiscountService memberShipDiscountService) {
+            PromotionService promotionService) {
         this.inputView = inputView;
         this.orderService = orderService;
         this.productService = productService;
         this.promotionService = promotionService;
-        this.memberShipDiscountService = memberShipDiscountService;
     }
 
     public void order() {
@@ -56,27 +49,6 @@ public class OrderController {
         checkInputHasValidFormat(input);
         checkProductAvailableToBuy(input);
         createOrdersFromUserInput(input);
-        discountWithMemberShip();
-    }
-
-    private void discountWithMemberShip() {
-        while (true) {
-            try {
-                String input = inputView.getAnswerToMemberShipDiscount();
-                checkIsValidAnswerToPromotionInfo(input);
-                calcDiscountWhenAnswerIsYes(input);
-                break;
-            } catch (CustomException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    private void calcDiscountWhenAnswerIsYes(String input) {
-        if (input.equals("Y")) {
-            List<Order> list = orderService.getNotPromotionProduct();
-            memberShipDiscountService.calculateDiscountPrice(list);
-        }
     }
 
     private void checkProductAvailableToBuy(String input) {

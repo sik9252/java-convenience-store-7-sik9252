@@ -17,6 +17,7 @@ public class StoreController {
     private final ProductController productController;
     private final PromotionController promotionController;
     private final OrderController orderController;
+    private final MemberShipDiscountController memberShipDiscountController;
     private final ReceiptController receiptController;
 
     private final OutputView outputView;
@@ -33,13 +34,14 @@ public class StoreController {
         ProductService productService = new ProductService(productRepository);
         PromotionService promotionService = new PromotionService(promotionRepository);
         OrderService orderService = new OrderService(orderRepository);
-        MemberShipDiscountService disCountServiceMemberShip = new MemberShipDiscountService(memberShipDiscount);
+        MemberShipDiscountService memberShipDiscountService = new MemberShipDiscountService(memberShipDiscount);
         ReceiptService receiptService = new ReceiptService(orderRepository, memberShipDiscount, receipt);
 
         productController = new ProductController(productService);
         promotionController = new PromotionController(promotionService);
-        orderController = new OrderController(inputView, orderService, productService, promotionService,
-                disCountServiceMemberShip);
+        orderController = new OrderController(inputView, orderService, productService, promotionService);
+        memberShipDiscountController = new MemberShipDiscountController(orderService, memberShipDiscountService,
+                inputView);
 
         outputView = new OutputView(productController);
         receiptController = new ReceiptController(orderService, receiptService, outputView);
@@ -51,6 +53,7 @@ public class StoreController {
         outputView.printWelcome();
         outputView.printProducts();
         orderController.order();
+        memberShipDiscountController.discountWithMemberShip();
         receiptController.makeReceipt();
     }
 }
