@@ -21,7 +21,7 @@ public class PromotionService {
         this.productService = productService;
     }
 
-    public void save(String filename) {
+    public void savePromotion(String filename) {
         List<String> lines = FileUtils.readFile(filename);
         lines.stream().skip(1).forEach(this::create);
     }

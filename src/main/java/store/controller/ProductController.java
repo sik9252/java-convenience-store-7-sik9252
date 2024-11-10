@@ -13,7 +13,7 @@ public class ProductController {
     }
 
     public void saveProducts() {
-        productService.save("products.md");
+        productService.saveProduct("products.md");
     }
 
     public String convertProductFormatToPrint() {

@@ -10,6 +10,6 @@ public class PromotionController {
     }
 
     public void savePromotions() {
-        promotionService.save("promotions.md");
+        promotionService.savePromotion("promotions.md");
     }
 }

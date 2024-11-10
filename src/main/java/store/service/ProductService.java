@@ -18,7 +18,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public void save(String filename) {
+    public void saveProduct(String filename) {
         List<String> lines = FileUtils.readFile(filename);
 
         for (int i = 1; i < lines.size(); i++) {
