@@ -71,26 +71,31 @@ public class ProductService {
         String name = productInfo[0];
         int price = Integer.parseInt(productInfo[1]);
         int quantity = Integer.parseInt(productInfo[2]);
-        String promotion = null;
+        String promotion = getPromotion(productInfo[3]);
 
-        if (!productInfo[3].trim().equals("null")) {
-            promotion = productInfo[3];
-
-            if (nextLine != null) {
-                String[] nextProductInfo = StringUtils.splitStringWithComma(nextLine);
-                String nextName = nextProductInfo[0];
-
-                if (!name.equals(nextName)) {
-                    Product product1 = new Product(name, price, quantity, promotion);
-                    Product product2 = new Product(name, price, 0, null);
-                    saveToRepository(product1);
-                    saveToRepository(product2);
-                    return null;
-                }
-            }
+        if (isPromotionDifferent(name, promotion, nextLine)) {
+            handleAddGeneralProduct(name, price, quantity, promotion);
+            return null;
         }
 
         return new Product(name, price, quantity, promotion);
+    }
+
+    private String getPromotion(String promotionInfo) {
+        return promotionInfo.trim().equals("null") ? null : promotionInfo;
+    }
+
+    private boolean isPromotionDifferent(String name, String promotion, String nextLine) {
+        if (promotion == null || nextLine == null) return false;
+        String nextName = StringUtils.splitStringWithComma(nextLine)[0];
+        return !name.equals(nextName);
+    }
+
+    private void handleAddGeneralProduct(String name, int price, int quantity, String promotion) {
+        Product productWithPromotion = new Product(name, price, quantity, promotion);
+        Product productWithoutPromotion = new Product(name, price, 0, null);
+        saveToRepository(productWithPromotion);
+        saveToRepository(productWithoutPromotion);
     }
 
     private void saveToRepository(Product product) {
