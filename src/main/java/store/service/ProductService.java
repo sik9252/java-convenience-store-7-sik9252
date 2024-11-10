@@ -1,7 +1,7 @@
 package store.service;
 
 import store.exception.CustomException;
-import store.implement.ProductRepositoryImpl;
+import store.repository.ProductRepositoryImpl;
 import store.model.Product;
 import store.utils.FileUtils;
 import store.utils.StringUtils;

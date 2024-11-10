@@ -1,7 +1,6 @@
-package store.implement;
+package store.repository;
 
 import store.model.Promotion;
-import store.repository.PromotionRepository;
 
 import java.util.ArrayList;
 import java.util.List;

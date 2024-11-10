@@ -1,7 +1,7 @@
 package store.service;
 
 import store.exception.CustomException;
-import store.implement.OrderRepositoryImpl;
+import store.repository.OrderRepositoryImpl;
 import store.model.Order;
 
 import java.util.List;

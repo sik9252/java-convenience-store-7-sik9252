@@ -1,7 +1,7 @@
 package store.service;
 
 import camp.nextstep.edu.missionutils.DateTimes;
-import store.implement.PromotionRepositoryImpl;
+import store.repository.PromotionRepositoryImpl;
 import store.model.Promotion;
 import store.utils.FileUtils;
 import store.utils.StringUtils;

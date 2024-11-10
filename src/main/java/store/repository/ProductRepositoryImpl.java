@@ -1,7 +1,6 @@
-package store.implement;
+package store.repository;
 
 import store.model.Product;
-import store.repository.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,11 +1,10 @@
 package store.controller;
 
 import store.exception.CustomException;
-import store.implement.OrderRepositoryImpl;
-import store.implement.ProductRepositoryImpl;
-import store.implement.PromotionRepositoryImpl;
+import store.repository.OrderRepositoryImpl;
+import store.repository.ProductRepositoryImpl;
+import store.repository.PromotionRepositoryImpl;
 import store.model.MemberShipDiscount;
-import store.model.Order;
 import store.model.Receipt;
 import store.service.MemberShipDiscountService;
 import store.service.OrderService;
@@ -15,8 +14,6 @@ import store.service.ReceiptService;
 
 import store.view.InputView;
 import store.view.OutputView;
-
-import java.util.List;
 
 import static store.exception.ErrorMessage.INVALID_INPUT;
 

@@ -1,6 +1,6 @@
 package store.service;
 
-import store.implement.OrderRepositoryImpl;
+import store.repository.OrderRepositoryImpl;
 import store.model.MemberShipDiscount;
 import store.model.Order;
 import store.model.Receipt;
