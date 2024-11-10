@@ -17,7 +17,7 @@ public class ProductController {
     }
 
     public String convertProductFormatToPrint() {
-        List<Product> products = productService.get();
+        List<Product> products = productService.getProducts();
         StringBuilder result = new StringBuilder();
 
         for (Product product : products) {

@@ -29,7 +29,7 @@ public class ProductService {
         }
     }
 
-    public List<Product> get() {
+    public List<Product> getProducts() {
         return productRepository.getProducts();
     }
 

@@ -77,7 +77,7 @@ public class OrderController {
 
     private void createOrder(String productName, int price, int requestQuantity) {
         if (promotionService.getPromotionInfo(productName) == null) {
-            orderService.createBuyOrder(productName, price, requestQuantity);
+            orderService.createTotalOrder(productName, price, requestQuantity);
             return;
         }
 
@@ -166,8 +166,8 @@ public class OrderController {
     private void createOrderWhenZeroRemainder(String productName, int price, int requestQuantity, int freeQuantity,
                                               int buy, int get) {
         if (requestQuantity % (buy + get) == 0) {
-            orderService.createBuyOrder(productName, price, requestQuantity);
-            orderService.createPromotionOrder(productName, price, freeQuantity);
+            orderService.createTotalOrder(productName, price, requestQuantity);
+            orderService.createFreeOrderByPromotion(productName, price, freeQuantity);
         }
     }
 
@@ -205,9 +205,9 @@ public class OrderController {
 
     private void createOrderWhenDiffIsTwo(String productName, int price, int requestQuantity, int freeQuantity,
                                           int buy) {
-        orderService.createBuyOrder(productName, price, requestQuantity);
+        orderService.createTotalOrder(productName, price, requestQuantity);
         if (requestQuantity != buy) {
-            orderService.createPromotionOrder(productName, price, freeQuantity);
+            orderService.createFreeOrderByPromotion(productName, price, freeQuantity);
         }
     }
 

@@ -20,8 +20,8 @@ public class ReceiptController {
 
     public void makeReceipt() {
         receiptService.calculate();
-        List<Order> buyOrders = orderService.getBuyOrders();
-        List<Order> promotionOrders = orderService.getPromotionOrders();
+        List<Order> buyOrders = orderService.getTotalOrder();
+        List<Order> promotionOrders = orderService.getFreeOrderByPromotion();
         int[] totalPriceInfos = getTotalPriceInfo(buyOrders);
 
         printTotalPriceInfo(buyOrders, promotionOrders, totalPriceInfos[0], totalPriceInfos[1], totalPriceInfos[2],

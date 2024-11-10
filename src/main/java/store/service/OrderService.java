@@ -17,21 +17,21 @@ public class OrderService {
         this.productService = productService;
     }
 
-    public List<Order> getBuyOrders() {
+    public List<Order> getTotalOrder() {
         return orderRepository.getTotalOrder();
     }
 
-    public List<Order> getPromotionOrders() {
+    public List<Order> getFreeOrderByPromotion() {
         return orderRepository.getFreeOrderByPromotion();
     }
 
-    public void saveBuyOrderToRepository(Order order) {
+    public void saveTotalOrder(Order order) {
         if (order != null) {
             orderRepository.saveTotalOrder(order);
         }
     }
 
-    public void savePromotionOrderToRepository(Order order) {
+    public void saveFreeOrderByPromotion(Order order) {
         if (order != null) {
             orderRepository.saveFreeOrderByPromotion(order);
         }
@@ -41,33 +41,33 @@ public class OrderService {
         return orderRepository.getNotPromotionProduct();
     }
 
-    public void createBuyOrder(String name, int price, int buyQuantity) {
+    public void createTotalOrder(String name, int price, int buyQuantity) {
         Order buyOrder = new Order(name, price, buyQuantity);
         productService.decreaseProductQuantity(name, buyQuantity);
-        saveBuyOrderToRepository(buyOrder);
+        saveTotalOrder(buyOrder);
     }
 
-    public void createPromotionOrder(String name, int price, int freeQuantity) {
+    public void createFreeOrderByPromotion(String name, int price, int freeQuantity) {
         if (freeQuantity > 0) {
             Order promotionOrder = new Order(name, price, freeQuantity);
-            savePromotionOrderToRepository(promotionOrder);
+            saveFreeOrderByPromotion(promotionOrder);
         }
     }
 
     public void createOrderWhenAnswerIsYes(String input, String productName, int price, int requestQuantity,
                                             int freeQuantity) {
         if (input.equals("Y")) {
-            createBuyOrder(productName, price, requestQuantity);
-            createPromotionOrder(productName, price, freeQuantity);
+            createTotalOrder(productName, price, requestQuantity);
+            createFreeOrderByPromotion(productName, price, freeQuantity);
         }
     }
 
     public void createOrderWhenAnswerIsNo(String input, String productName, int price, int requestQuantity,
                                            int freeQuantity, int buy) {
         if (input.equals("N")) {
-            createBuyOrder(productName, price, requestQuantity);
+            createTotalOrder(productName, price, requestQuantity);
             if (requestQuantity != buy) {
-                createPromotionOrder(productName, price, freeQuantity);
+                createFreeOrderByPromotion(productName, price, freeQuantity);
             }
         }
     }

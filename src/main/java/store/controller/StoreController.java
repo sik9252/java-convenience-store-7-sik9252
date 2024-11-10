@@ -39,7 +39,7 @@ public class StoreController {
     private final OutputView outputView;
 
     public StoreController() {
-        memberShipDiscount = new MemberShipDiscount(0);
+        memberShipDiscount = new MemberShipDiscount();
         receipt = new Receipt(0, 0, 0, 0);
 
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
