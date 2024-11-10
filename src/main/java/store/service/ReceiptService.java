@@ -56,13 +56,13 @@ public class ReceiptService {
     }
 
     private void calcTotalDiscountPrice() {
-        receipt.setTotalDiscountPrice(memberShipDiscount.getDiscountPrice());
+        receipt.setTotalDiscountPrice(memberShipDiscount.getMemberShipDiscountPrice());
     }
 
     private void calcTotalPurchasePrice() {
         int totalOrderPrice = receipt.getTotalOrderPrice();
         int totalPromotionPrice = receipt.getTotalPromotionPrice();
-        int totalDiscountPrice = memberShipDiscount.getDiscountPrice();
+        int totalDiscountPrice = memberShipDiscount.getMemberShipDiscountPrice();
 
         receipt.setTotalPurchasePrice(totalOrderPrice - totalPromotionPrice - totalDiscountPrice);
     }

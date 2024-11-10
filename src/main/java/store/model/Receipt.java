@@ -7,11 +7,11 @@ public class Receipt {
     private int totalPurchasePrice;
 
 
-    public Receipt(int totalOrderPrice, int totalPromotionPrice, int totalDiscountPrice, int totalPurchasePrice) {
-        this.totalOrderPrice = totalOrderPrice;
-        this.totalPromotionPrice = totalPromotionPrice;
-        this.totalDiscountPrice = totalDiscountPrice;
-        this.totalPurchasePrice = totalPurchasePrice;
+    public Receipt() {
+        this.totalOrderPrice = 0;
+        this.totalPromotionPrice = 0;
+        this.totalDiscountPrice = 0;
+        this.totalPurchasePrice = 0;
     }
 
     public int getTotalOrderPrice() {

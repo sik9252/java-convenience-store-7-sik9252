@@ -9,7 +9,7 @@ public class PromotionRepositoryImpl implements PromotionRepository {
     private final List<Promotion> promotions = new ArrayList<>();
 
     @Override
-    public void addPromotion(Promotion promotion) {
+    public void savePromotion(Promotion promotion) {
         promotions.add(promotion);
     }
 

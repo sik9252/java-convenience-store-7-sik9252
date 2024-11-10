@@ -7,11 +7,11 @@ public class MemberShipDiscount {
         this.discountPrice = 0;
     }
 
-    public int getDiscountPrice() {
+    public int getMemberShipDiscountPrice() {
         return discountPrice;
     }
 
-    public void setDiscountPrice(int discountPrice) {
+    public void setMemberShipDiscountPrice(int discountPrice) {
         this.discountPrice = discountPrice;
     }
 }

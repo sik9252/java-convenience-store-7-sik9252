@@ -40,7 +40,7 @@ public class StoreController {
 
     public StoreController() {
         memberShipDiscount = new MemberShipDiscount();
-        receipt = new Receipt(0, 0, 0, 0);
+        receipt = new Receipt();
 
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         PromotionRepositoryImpl promotionRepository = new PromotionRepositoryImpl();

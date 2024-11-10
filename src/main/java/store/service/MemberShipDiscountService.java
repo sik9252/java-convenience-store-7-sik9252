@@ -13,7 +13,7 @@ public class MemberShipDiscountService {
     }
 
     public void setDiscountPrice(int discountPrice) {
-        memberShipDiscount.setDiscountPrice(discountPrice);
+        memberShipDiscount.setMemberShipDiscountPrice(discountPrice);
     }
 
     public void calculateDiscountPrice(List<Order> list) {

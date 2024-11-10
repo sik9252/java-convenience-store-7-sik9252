@@ -82,7 +82,7 @@ public class PromotionService {
 
     private void saveToRepository(Promotion promotion) {
         if (promotion != null) {
-            promotionRepository.addPromotion(promotion);
+            promotionRepository.savePromotion(promotion);
         }
     }
 }
