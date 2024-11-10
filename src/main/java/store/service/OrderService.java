@@ -18,22 +18,22 @@ public class OrderService {
     }
 
     public List<Order> getBuyOrders() {
-        return orderRepository.getBuyOrders();
+        return orderRepository.getTotalOrder();
     }
 
     public List<Order> getPromotionOrders() {
-        return orderRepository.getPromotionOrders();
+        return orderRepository.getFreeOrderByPromotion();
     }
 
     public void saveBuyOrderToRepository(Order order) {
         if (order != null) {
-            orderRepository.addBuyOrder(order);
+            orderRepository.saveTotalOrder(order);
         }
     }
 
     public void savePromotionOrderToRepository(Order order) {
         if (order != null) {
-            orderRepository.addPromotionOrder(order);
+            orderRepository.saveFreeOrderByPromotion(order);
         }
     }
 

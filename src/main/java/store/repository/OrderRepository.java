@@ -5,11 +5,11 @@ import store.model.Order;
 import java.util.List;
 
 public interface OrderRepository {
-    void addBuyOrder(Order order);
+    void saveTotalOrder(Order order);
 
-    void addPromotionOrder(Order order);
+    void saveFreeOrderByPromotion(Order order);
 
-    List<Order> getBuyOrders();
+    List<Order> getTotalOrder();
 
-    List<Order> getPromotionOrders();
+    List<Order> getFreeOrderByPromotion();
 }

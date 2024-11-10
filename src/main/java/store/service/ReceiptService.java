@@ -40,7 +40,7 @@ public class ReceiptService {
     }
 
     private void calcTotalOrderPrice() {
-        int totalOrderPrice = orderRepository.getBuyOrders().stream()
+        int totalOrderPrice = orderRepository.getTotalOrder().stream()
                 .mapToInt(Order::getTotalPrice)
                 .sum();
 
@@ -48,7 +48,7 @@ public class ReceiptService {
     }
 
     private void calcTotalPromotionPrice() {
-        int totalPromotionPrice = orderRepository.getPromotionOrders().stream()
+        int totalPromotionPrice = orderRepository.getFreeOrderByPromotion().stream()
                 .mapToInt(Order::getTotalPrice)
                 .sum();
 

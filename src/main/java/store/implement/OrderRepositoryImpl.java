@@ -7,28 +7,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderRepositoryImpl implements OrderRepository {
-    private final List<Order> buyOrders = new ArrayList<>();
-    private final List<Order> promotionOrders = new ArrayList<>();
+    private final List<Order> totalOrder = new ArrayList<>();
+    private final List<Order> freeOrderByPromotion = new ArrayList<>();
     private List<Order> notPromotionOrders = new ArrayList<>();
 
     @Override
-    public void addBuyOrder(Order order) {
-        buyOrders.add(order);
+    public void saveTotalOrder(Order order) {
+        totalOrder.add(order);
     }
 
     @Override
-    public void addPromotionOrder(Order order) {
-        promotionOrders.add(order);
+    public void saveFreeOrderByPromotion(Order order) {
+        freeOrderByPromotion.add(order);
     }
 
     @Override
-    public List<Order> getBuyOrders() {
-        return buyOrders;
+    public List<Order> getTotalOrder() {
+        return totalOrder;
     }
 
     @Override
-    public List<Order> getPromotionOrders() {
-        return promotionOrders;
+    public List<Order> getFreeOrderByPromotion() {
+        return freeOrderByPromotion;
     }
 
     public List<Order> getNotPromotionProduct() {
@@ -37,10 +37,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     private void removePromotionOrders() {
-        List<Order> list = new ArrayList<>(buyOrders);
+        List<Order> list = new ArrayList<>(totalOrder);
 
-        list.removeIf(buyOrder -> promotionOrders.stream().anyMatch(promotionOrder ->
-                promotionOrder.getName().equals(buyOrder.getName())));
+        list.removeIf(buyOrder -> freeOrderByPromotion.stream()
+                .anyMatch(promotionOrder -> promotionOrder.getName().equals(buyOrder.getName())));
 
         notPromotionOrders = list;
     }
