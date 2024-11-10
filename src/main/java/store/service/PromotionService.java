@@ -45,18 +45,22 @@ public class PromotionService {
 
     private int[] checkPromotionIsAvailable(String promotionName) {
         if (promotionName != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDateTime startDate = LocalDate.parse(getStartDateOfPromotion(promotionName), formatter).atStartOfDay();
-            LocalDateTime endDate =
-                    LocalDate.parse(getEndDateOfPromotion(promotionName), formatter).atTime(LocalTime.MAX);
-            LocalDateTime today = DateTimes.now();
-
-            if (!today.isBefore(startDate) && !today.isAfter(endDate)) {
+            if (comparePromotionDurationAndToday(promotionName)) {
                 return getBenefitOfPromotion(promotionName);
             }
         }
 
         return null;
+    }
+
+    private boolean comparePromotionDurationAndToday(String promotionName) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime startDate = LocalDate.parse(getStartDateOfPromotion(promotionName), formatter).atStartOfDay();
+        LocalDateTime endDate =
+                LocalDate.parse(getEndDateOfPromotion(promotionName), formatter).atTime(LocalTime.MAX);
+        LocalDateTime today = DateTimes.now();
+
+        return !today.isBefore(startDate) && !today.isAfter(endDate);
     }
 
     private void create(String line) {

@@ -11,7 +11,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     private final List<Product> products = new ArrayList<>();
 
     @Override
-    public void addProduct(Product product) {
+    public void saveProduct(Product product) {
         products.add(product);
     }
 
@@ -20,12 +20,12 @@ public class ProductRepositoryImpl implements ProductRepository {
         return products;
     }
 
-    public boolean isProductExist(String name) {
+    public boolean checkIsProductExistInStore(String name) {
         return products.stream()
                 .anyMatch(product -> product.getName().equals(name));
     }
 
-    public boolean isQuantityAvailable(String name, int quantityToBuy) {
+    public boolean checkIsQuantityAvailableToBuy(String name, int quantityToBuy) {
         int totalQuantity = products.stream()
                 .filter(product -> product.getName().equals(name))
                 .mapToInt(Product::getQuantity)
@@ -61,20 +61,34 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     public void decreaseProductQuantity(String productName, int quantityToDecrease) {
         for (Product product : products) {
-            if (!product.getName().equals(productName)) {
-                continue;
+            if (isMatchingProduct(product, productName)) {
+                quantityToDecrease = processQuantityDecrease(product, quantityToDecrease);
+                if (quantityToDecrease == 0) break;
             }
-
-            int currentQuantity = product.getQuantity();
-            int newQuantity = currentQuantity - quantityToDecrease;
-
-            if (newQuantity >= 0) {
-                product.setQuantity(newQuantity);
-                break;
-            }
-
-            product.setQuantity(0);
-            quantityToDecrease -= currentQuantity;
         }
     }
+
+    private boolean isMatchingProduct(Product product, String productName) {
+        return product.getName().equals(productName);
+    }
+
+    private int processQuantityDecrease(Product product, int quantityToDecrease) {
+        int currentQuantity = product.getQuantity();
+        int newQuantity = calculateNewQuantity(currentQuantity, quantityToDecrease);
+        updateProductQuantity(product, newQuantity);
+        return calculateRemainingQuantityToDecrease(quantityToDecrease, currentQuantity);
+    }
+
+    private int calculateNewQuantity(int currentQuantity, int quantityToDecrease) {
+        return currentQuantity - quantityToDecrease;
+    }
+
+    private void updateProductQuantity(Product product, int newQuantity) {
+        product.setQuantity(Math.max(newQuantity, 0));
+    }
+
+    private int calculateRemainingQuantityToDecrease(int quantityToDecrease, int currentQuantity) {
+        return Math.max(quantityToDecrease - currentQuantity, 0);
+    }
+
 }

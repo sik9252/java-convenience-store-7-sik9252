@@ -9,7 +9,7 @@ public class PromotionController {
         this.promotionService = promotionService;
     }
 
-    public void savePromotion() {
+    public void savePromotions() {
         promotionService.save("promotions.md");
     }
 }

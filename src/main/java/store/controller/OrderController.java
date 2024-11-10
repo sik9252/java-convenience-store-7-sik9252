@@ -89,10 +89,10 @@ public class OrderController {
         int get = promotionService.getPromotionInfo(productName)[1];
         int diff = (((requestQuantity / (buy + get)) + 1) * (buy + get)) - requestQuantity;
         int freeQuantity = requestQuantity / (buy + get);
-        int possibleQuantityToBuyPromotion = productService.getProductQuantity(productName);
+        int availableQuantityCanBuy = productService.getProductQuantity(productName);
 
-        if (possibleQuantityToBuyPromotion < requestQuantity + freeQuantity) {
-            handleInsufficientStock(productName, price, requestQuantity, buy, get, possibleQuantityToBuyPromotion);
+        if (availableQuantityCanBuy < requestQuantity + freeQuantity) {
+            handleInsufficientStock(productName, price, requestQuantity, buy, get, availableQuantityCanBuy);
             return;
         }
 
@@ -105,8 +105,8 @@ public class OrderController {
     }
 
     private void handleInsufficientStock(String productName, int price, int requestQuantity,
-                                         int buy, int get, int possibleQuantityToBuyPromotion) {
-        int canBuy = calculateCanBuyQuantity(requestQuantity, buy, get, possibleQuantityToBuyPromotion);
+                                         int buy, int get, int availableQuantityCanBuy) {
+        int canBuy = calculateCanBuyQuantity(requestQuantity, buy, get, availableQuantityCanBuy);
         int exceedQuantity = requestQuantity - canBuy;
 
         while (true) {
@@ -119,12 +119,14 @@ public class OrderController {
         }
     }
 
-    private int calculateCanBuyQuantity(int requestQuantity, int buy, int get, int possibleQuantityToBuyPromotion) {
+    private int calculateCanBuyQuantity(int requestQuantity, int buy, int get, int availableQuantityCanBuy) {
         int calc = ((requestQuantity / (buy + get))) * (buy + get);
-        if (calc < possibleQuantityToBuyPromotion) {
+
+        if (calc < availableQuantityCanBuy) {
             return calc;
         }
-        return (((possibleQuantityToBuyPromotion / (buy + get))) * (buy + get));
+
+        return (((availableQuantityCanBuy / (buy + get))) * (buy + get));
     }
 
     private void tryInputByExceed(String productName, int price, int requestQuantity,

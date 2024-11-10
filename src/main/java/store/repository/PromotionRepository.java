@@ -6,6 +6,4 @@ import java.util.List;
 
 public interface PromotionRepository {
     void addPromotion(Promotion promotion);
-
-    List<Promotion> getPromotions();
 }

@@ -22,13 +22,13 @@ public class ReceiptController {
         receiptService.calculate();
         List<Order> buyOrders = orderService.getBuyOrders();
         List<Order> promotionOrders = orderService.getPromotionOrders();
-        int[] totalPriceInfos = getTotalPriceInfos(buyOrders);
+        int[] totalPriceInfos = getTotalPriceInfo(buyOrders);
 
-        printInfo(buyOrders, promotionOrders, totalPriceInfos[0], totalPriceInfos[1], totalPriceInfos[2],
+        printTotalPriceInfo(buyOrders, promotionOrders, totalPriceInfos[0], totalPriceInfos[1], totalPriceInfos[2],
                 totalPriceInfos[3], totalPriceInfos[4]);
     }
 
-    private void printInfo(List<Order> buyOrders, List<Order> promotionOrders, int totalQuantity, int totalOrderPrice
+    private void printTotalPriceInfo(List<Order> buyOrders, List<Order> promotionOrders, int totalQuantity, int totalOrderPrice
             , int totalPromotionPrice, int totalDiscountPrice, int totalPurchasePrice) {
         outputView.printTotalOrderInfo(buyOrders);
         outputView.printTotalPromotionInfo(promotionOrders);
@@ -36,7 +36,7 @@ public class ReceiptController {
                 totalPurchasePrice);
     }
 
-    private int[] getTotalPriceInfos(List<Order> buyOrders) {
+    private int[] getTotalPriceInfo(List<Order> buyOrders) {
         int totalQuantity = buyOrders.stream().mapToInt(Order::getQuantity).sum();
         int totalOrderPrice = receiptService.getTotalOrderPrice();
         int totalPromotionPrice = receiptService.getTotalPromotionPrice();

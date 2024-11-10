@@ -50,13 +50,13 @@ public class ProductService {
     }
 
     public void checkProductExist(String productName) {
-        if (!productRepository.isProductExist(productName)) {
+        if (!productRepository.checkIsProductExistInStore(productName)) {
             throw new CustomException(PRODUCT_NOT_EXIST.getMessage() + "\n");
         }
     }
 
     public void checkQuantityAvailableToBuy(String productName, int quantityToBuy) {
-        if (!productRepository.isQuantityAvailable(productName, quantityToBuy)) {
+        if (!productRepository.checkIsQuantityAvailableToBuy(productName, quantityToBuy)) {
             throw new CustomException(EXCEEDED_STOCK_QUANTITY.getMessage() + "\n");
         }
     }
@@ -95,7 +95,7 @@ public class ProductService {
 
     private void saveToRepository(Product product) {
         if (product != null) {
-            productRepository.addProduct(product);
+            productRepository.saveProduct(product);
         }
     }
 }

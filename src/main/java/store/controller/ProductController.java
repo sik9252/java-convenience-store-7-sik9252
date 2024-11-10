@@ -21,14 +21,18 @@ public class ProductController {
         StringBuilder result = new StringBuilder();
 
         for (Product product : products) {
-            String quantityInfo = getQuantityInfo(product);
-            String promotionInfo = getPromotionInfo(product);
-
-            result.append(String.format("- %s %,d원 %s%s%n", product.getName(), product.getPrice(),
-                    quantityInfo, promotionInfo));
+            addProductToConvert(product, result);
         }
 
         return result.toString();
+    }
+
+    private void addProductToConvert(Product product, StringBuilder result) {
+        String quantityInfo = getQuantityInfo(product);
+        String promotionInfo = getPromotionInfo(product);
+
+        result.append(String.format("- %s %,d원 %s%s%n", product.getName(), product.getPrice(),
+                quantityInfo, promotionInfo));
     }
 
     private String getQuantityInfo(Product product) {

@@ -23,15 +23,19 @@ public class MemberShipDiscountController {
     public void discountWithMemberShip() {
         while (true) {
             try {
-                String input = inputView.getAnswerToMemberShipDiscount();
-                orderService.checkIsValidAnswerToPromotionInfo(input);
-                calcDiscountWhenAnswerIsYes(input);
-                calcDiscountWhenAnswerIsNo(input);
+                tryInputByMemberShipDiscount();
                 break;
             } catch (CustomException e) {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    private void tryInputByMemberShipDiscount() {
+        String input = inputView.getAnswerToMemberShipDiscount();
+        orderService.checkIsValidAnswerToPromotionInfo(input);
+        calcDiscountWhenAnswerIsYes(input);
+        calcDiscountWhenAnswerIsNo(input);
     }
 
     private void calcDiscountWhenAnswerIsYes(String input) {

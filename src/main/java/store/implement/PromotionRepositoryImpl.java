@@ -14,11 +14,6 @@ public class PromotionRepositoryImpl implements PromotionRepository {
         promotions.add(promotion);
     }
 
-    @Override
-    public List<Promotion> getPromotions() {
-        return promotions;
-    }
-
     public int[] getPromotionBenefit(String promotionName) {
         return promotions.stream()
                 .filter(promotion -> promotion.getName().equals(promotionName))
