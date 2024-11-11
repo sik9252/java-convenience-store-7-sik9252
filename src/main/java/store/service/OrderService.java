@@ -37,10 +37,6 @@ public class OrderService {
         }
     }
 
-    public List<Order> getNotPromotionProduct() {
-        return orderRepository.getNotPromotionProduct();
-    }
-
     public void createTotalOrder(String name, int price, int buyQuantity) {
         Order buyOrder = new Order(name, price, buyQuantity);
         productService.decreaseProductQuantity(name, buyQuantity);

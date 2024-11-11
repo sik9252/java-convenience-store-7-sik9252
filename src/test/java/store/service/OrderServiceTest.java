@@ -66,24 +66,6 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("프로모션 혜택을 받지 않은 주문을 가져온다.")
-    void getNotPromotionProduct() {
-        Order order1 = new Order("콜라", 1000, 3);
-        Order freeOrder1 = new Order("콜라", 1000, 1);
-        Order order2 = new Order("초코칩", 1200, 2);
-        Order freeOrder2 = new Order("초코칩", 1200, 1);
-        Order order3 = new Order("비타민워터", 1000, 2);
-        orderService.saveTotalOrder(order1);
-        orderService.saveFreeOrderByPromotion(freeOrder1);
-        orderService.saveTotalOrder(order2);
-        orderService.saveFreeOrderByPromotion(freeOrder2);
-        orderService.saveTotalOrder(order3);
-
-        List<Order> notPromotionOrders = orderService.getNotPromotionProduct();
-        assertThat(notPromotionOrders).hasSize(1);
-    }
-
-    @Test
     @DisplayName("안내 메시지에 유효한 답변이 아닌 경우 예외를 던진다.")
     void invalidAnswerThrowsException() {
         assertThatThrownBy(() -> orderService.checkIsValidAnswerToPromotionInfo("X"))
