@@ -24,24 +24,28 @@ class MemberShipDiscountServiceTest {
     @Test
     @DisplayName("멤버십 회원은 (프로모션 미적용) 금액의 30%를 할인한다.")
     void calculateDiscountPrice() {
-        Order order1 = new Order("콜라", 15000, 1);
-        Order order2 = new Order("사이다", 10000, 1);
+        Order order1 = new Order("콜라", 1000, 3);
+        Order freeOrder1 = new Order("콜라", 1000, 1);
+        Order order2 = new Order("사이다", 1000, 1);
         List<Order> orders = Arrays.asList(order1, order2);
+        List<Order> freeOrders = List.of(freeOrder1);
 
-        discountService.calculateDiscountPrice(orders);
+        discountService.calculateDiscountPrice(orders, freeOrders);
 
-        assertThat(memberShipDiscount.getMemberShipDiscountPrice()).isEqualTo(7500);
+        assertThat(memberShipDiscount.getMemberShipDiscountPrice()).isEqualTo(900);
     }
 
     @Test
     @DisplayName("할인가는 8000을 초과하지 않는다.")
     void maxDiscountIs8000() {
-        Order order1 = new Order("콜라", 20000, 1);
+        Order order1 = new Order("콜라", 20000, 3);
+        Order freeOrder1 = new Order("콜라", 20000, 1);
         Order order2 = new Order("사이다", 20000, 1);
         Order order3 = new Order("초코바", 15000, 1);
         List<Order> orders = Arrays.asList(order1, order2, order3);
+        List<Order> freeOrders = List.of(freeOrder1);
 
-        discountService.calculateDiscountPrice(orders);
+        discountService.calculateDiscountPrice(orders, freeOrders);
 
         assertThat(memberShipDiscount.getMemberShipDiscountPrice()).isEqualTo(8000);
     }

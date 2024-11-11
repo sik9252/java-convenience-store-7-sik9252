@@ -40,8 +40,9 @@ public class MemberShipDiscountController {
 
     private void calcDiscountWhenAnswerIsYes(String input) {
         if (input.equals("Y")) {
-            List<Order> list = orderService.getNotPromotionProduct();
-            memberShipDiscountService.calculateDiscountPrice(list);
+            List<Order> totalOrder= orderService.getTotalOrder();
+            List<Order> freeOrder = orderService.getFreeOrderByPromotion();
+            memberShipDiscountService.calculateDiscountPrice(totalOrder, freeOrder);
         }
     }
 

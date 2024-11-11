@@ -16,12 +16,16 @@ public class MemberShipDiscountService {
         memberShipDiscount.setMemberShipDiscountPrice(discountPrice);
     }
 
-    public void calculateDiscountPrice(List<Order> list) {
-        int totalPrice = list.stream()
+    public void calculateDiscountPrice(List<Order> totalOrder, List<Order> freeOrder) {
+        int totalPrice = totalOrder.stream()
                 .mapToInt(Order::getTotalPrice)
                 .sum();
 
-        int discountPrice = (int) (totalPrice * 0.3);
+        int freePrice = freeOrder.stream()
+                .mapToInt(Order::getTotalPrice)
+                .sum();
+
+        int discountPrice = (int) ((totalPrice - freePrice) * 0.3);
         discountPrice = Math.min(discountPrice, 8000);
 
         setDiscountPrice(discountPrice);
